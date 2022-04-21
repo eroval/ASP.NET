@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -54,10 +55,14 @@ namespace WebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Image")] Picture picture)
+        public async Task<IActionResult> Create(Picture picture)
         {
             if (ModelState.IsValid)
             {
+                MemoryStream ms = new MemoryStream();
+                picture.ImageFile.CopyTo(ms);
+                byte[] array = ms.ToArray();
+                picture.Image = Convert.ToBase64String(array);
                 _context.Add(picture);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
