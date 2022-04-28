@@ -41,6 +41,7 @@ namespace WebApplication.Controllers
                 return NotFound();
             }
 
+            ViewBag.Base64String = "data:image/png;base64," + picture.Image;
             return View(picture);
         }
 
@@ -59,10 +60,11 @@ namespace WebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                MemoryStream ms = new MemoryStream();
-                picture.ImageFile.CopyTo(ms);
-                byte[] array = ms.ToArray();
-                picture.Image = Convert.ToBase64String(array);
+                //MemoryStream ms = new MemoryStream();
+                using (MemoryStream ms = new MemoryStream()) {
+                    picture.ImageFile.CopyTo(ms);
+                    picture.Image = Convert.ToBase64String(ms.ToArray());
+                }
                 _context.Add(picture);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

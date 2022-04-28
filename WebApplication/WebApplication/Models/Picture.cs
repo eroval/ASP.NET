@@ -14,7 +14,7 @@ namespace WebApplication.Models
         public string Image { get; set; }
 
         [NotMapped]
-        [DisplayName("Upload File")]
+        [DisplayName("")]
         public IFormFile ImageFile { get; set; }
 
         public Picture() {
