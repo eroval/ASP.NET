@@ -21,9 +21,11 @@ namespace WebApplication.Controllers
         }
 
         // GET: Pictures
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            return View(await _context.Picture.ToListAsync());
+            var pictures = from p in _context.Picture select p;
+            int pageSize = 5;
+            return View(await PaginatedList<Picture>.CreateAsync(pictures.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Pictures/Details/5

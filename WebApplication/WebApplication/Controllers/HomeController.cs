@@ -20,7 +20,7 @@ namespace WebApplication.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Pictures", new { area = "" });
         }
 
         public IActionResult Privacy()
