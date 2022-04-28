@@ -5,17 +5,18 @@
 }
 
 <div class = "text-center">
-    <dl class="row">
-            <h1>@Html.DisplayFor(model => model.Title)</h1>
-    </dl>
-
-    <dl class="row">
+    <div class="row">
+            <div class="col">
+                <h1>@Html.DisplayFor(model => model.Title)</h1>
+            </div>
+            <div class="col" style="padding-top: 16px;">
+                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                <a asp-action="Delete">Delete</a>
+            </div>
+    </div>
+    </br>
+    <div class="row">
         </hr>
-        <img alt="Picture" src="@ViewBag.Base64String" style="width:95%; height:auto;"/>
-    </dl>
-</div>
-<div>
-    </hr>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        <img alt="Picture" style="width:95%; height:auto; -webkit-box-shadow: 0px 0px 8px -1px #000000; box-shadow: 0px 0px 8px -1px #000000;" src="@ViewBag.Base64String"/>
+    </div>
 </div>

@@ -93,7 +93,7 @@ namespace WebApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Image")] Picture picture)
+        public async Task<IActionResult> Edit(int id, Picture picture)
         {
             if (id != picture.Id)
             {
@@ -104,6 +104,11 @@ namespace WebApplication.Controllers
             {
                 try
                 {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        picture.ImageFile.CopyTo(ms);
+                        picture.Image = Convert.ToBase64String(ms.ToArray());
+                    }
                     _context.Update(picture);
                     await _context.SaveChangesAsync();
                 }
