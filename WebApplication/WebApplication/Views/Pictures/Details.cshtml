@@ -1,0 +1,22 @@
+﻿@model WebApplication.Models.Picture
+
+@{
+    ViewData["Title"] = @Html.DisplayFor(model => model.Title);
+}
+
+<div class = "text-center">
+    <div class="row">
+            <div class="col">
+                <h1>@Html.DisplayFor(model => model.Title)</h1>
+            </div>
+            <div class="col" style="padding-top: 17px;">
+                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            </div>
+    </div>
+    </br>
+    <div class="row">
+        </hr>
+        <img alt="Picture" style="width:95%; height:auto; -webkit-box-shadow: 0px 0px 8px -1px #000000; box-shadow: 0px 0px 8px -1px #000000;" src="@ViewBag.Base64String"/>
+    </div>
+</div>

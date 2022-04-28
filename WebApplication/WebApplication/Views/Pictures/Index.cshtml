@@ -1,0 +1,65 @@
+﻿@model PaginatedList<WebApplication.Models.Picture> 
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<table class="table">
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">View</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<br />
+<div class = "text-center">
+@{
+    if(Model.HasPrePreviousPage){
+        <a asp-action="Index"
+        asp-route-page="@(Model.PageIndex - 2)"
+        class="btn btn-default">
+        @(Model.PageIndex-2)
+        </a>
+    }
+
+    if(Model.HasPreviousPage){
+        <a asp-action="Index"
+        asp-route-page="@(Model.PageIndex - 1)"
+        class="btn btn-default">
+        @(Model.PageIndex-1)
+        </a>
+    }
+
+    <a asp-action="Index"
+    asp-route-page="@(Model.PageIndex)"
+    class="btn btn-default disabled">
+    @(Model.PageIndex)
+    </a>
+
+    if(Model.HasNextPage){
+        <a asp-action="Index"
+        asp-route-page="@(Model.PageIndex + 1)"
+        class="btn btn-default">
+        @(Model.PageIndex+1)
+        </a>
+    }
+
+    if(Model.HasNextNextPage){
+        <a asp-action="Index"
+        asp-route-page="@(Model.PageIndex + 2)"
+        class="btn btn-default">
+        @(Model.PageIndex+2)
+        </a>
+    }
+}
+</div>
