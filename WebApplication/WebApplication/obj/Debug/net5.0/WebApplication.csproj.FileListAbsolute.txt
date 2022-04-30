@@ -163,3 +163,4 @@ D:\Github\ASP.NET\WebApplication\WebApplication\obj\Debug\net5.0\Razor\Views\Pic
 D:\Github\ASP.NET\WebApplication\WebApplication\obj\Debug\net5.0\Razor\Views\Pictures\Edit.cshtml.g.cs
 D:\Github\ASP.NET\WebApplication\WebApplication\obj\Debug\net5.0\Razor\Views\Pictures\Index.cshtml.g.cs
 D:\Github\ASP.NET\WebApplication\WebApplication\obj\Debug\net5.0\Razor\Views\Pictures\Search.cshtml.g.cs
+D:\Github\ASP.NET\WebApplication\WebApplication\obj\Debug\net5.0\Razor\Views\Pictures\Invalid.cshtml.g.cs
