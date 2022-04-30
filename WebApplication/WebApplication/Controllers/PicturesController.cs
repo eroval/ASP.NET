@@ -28,6 +28,21 @@ namespace WebApplication.Controllers
             return View(await PaginatedList<Picture>.CreateAsync(pictures.AsNoTracking(), page ?? 1, pageSize));
         }
 
+        // GET: Pictures/Search
+        public IActionResult Search()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Search(String Title, int? page)
+        {
+            var pictures = from p in _context.Picture select p;
+            int pageSize = 5;
+            return View("Index", await PaginatedList<Picture>.CreateAsync(pictures.AsNoTracking().Where(p => p.Title.Contains(Title)), page ?? 1, pageSize));
+        }
+
         // GET: Pictures/Details/5
         public async Task<IActionResult> Details(int? id)
         {
