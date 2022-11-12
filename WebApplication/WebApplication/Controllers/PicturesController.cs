@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,29 @@ namespace WebApplication.Controllers
         {
             var pictures = from p in _context.Picture select p;
             int pageSize = 5;
+            if (HttpContext.User.Identity.IsAuthenticated) {
+                ViewData["Guest"] = "false";
+                ViewData["CurrentUser"] = HttpContext.User.Identity.Name;
+            }
+            else {
+                ViewData["Guest"] = "true";
+            }
             return View(await PaginatedList<Picture>.CreateAsync(pictures.AsNoTracking(), page ?? 1, pageSize));
+        }
+
+        // GET: Pictures/Search
+        public IActionResult Search()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Search(String Title, int? page)
+        {
+            var pictures = from p in _context.Picture select p;
+            int pageSize = 5;
+            return View("Index", await PaginatedList<Picture>.CreateAsync(pictures.AsNoTracking().Where(p => p.Title.Contains(Title)), page ?? 1, pageSize));
         }
 
         // GET: Pictures/Details/5
@@ -47,12 +70,14 @@ namespace WebApplication.Controllers
             return View(picture);
         }
 
+        [Authorize]
         // GET: Pictures/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize]
         // POST: Pictures/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -67,6 +92,7 @@ namespace WebApplication.Controllers
                     picture.ImageFile.CopyTo(ms);
                     picture.Image = Convert.ToBase64String(ms.ToArray());
                 }
+                picture.UserName = HttpContext.User.Identity.Name;
                 _context.Add(picture);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -74,6 +100,7 @@ namespace WebApplication.Controllers
             return View(picture);
         }
 
+        [Authorize]
         // GET: Pictures/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -87,9 +114,11 @@ namespace WebApplication.Controllers
             {
                 return NotFound();
             }
+            if (HttpContext.User.Identity.Name != picture.UserName) { return View("Invalid"); }
             return View(picture);
         }
 
+        [Authorize]
         // POST: Pictures/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -101,9 +130,9 @@ namespace WebApplication.Controllers
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
+                if (HttpContext.User.Identity.Name != picture.UserName) { return View("Invalid"); }
                 try
                 {
                     using (MemoryStream ms = new MemoryStream())
@@ -130,6 +159,7 @@ namespace WebApplication.Controllers
             return View(picture);
         }
 
+        [Authorize]
         // GET: Pictures/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -145,15 +175,18 @@ namespace WebApplication.Controllers
                 return NotFound();
             }
 
+            if (HttpContext.User.Identity.Name != picture.UserName) { return View("Invalid"); }
             return View(picture);
         }
 
+        [Authorize]
         // POST: Pictures/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var picture = await _context.Picture.FindAsync(id);
+            if (HttpContext.User.Identity.Name != picture.UserName) { return View("Invalid"); }
             _context.Picture.Remove(picture);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

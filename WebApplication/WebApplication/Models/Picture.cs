@@ -13,6 +13,8 @@ namespace WebApplication.Models
 
         public string Image { get; set; }
 
+        public string UserName { get; set; }
+
         [NotMapped]
         [DisplayName("")]
         public IFormFile ImageFile { get; set; }
